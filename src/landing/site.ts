@@ -21,6 +21,9 @@ export const navLinks: NavLink[] = [
   { label: 'FAQ', href: '#faq' },
 ];
 
+/** Footer links mirror the header; kept next to them so they stay in sync. */
+export const footerLinks: NavLink[] = navLinks;
+
 export interface Step {
   title: string;
   body: string;
@@ -28,15 +31,15 @@ export interface Step {
 
 export const steps: Step[] = [
   {
-    title: 'Drop in a video',
-    body: 'Drag an MP4, MOV, MKV, AVI or WebM onto the page. There is a built-in 15-second sample if you just want to see it run.',
+    title: 'Upload video',
+    body: 'Drag an MP4, MOV, MKV, AVI or WebM onto the page, or load the built-in 15-second sample to see it run.',
   },
   {
-    title: 'Set length and overlay',
+    title: 'Clip & overlay',
     body: 'Pick 30s, 1m, 2m, 3m or any custom duration, style the text, and watch it composited over the real frame before you commit.',
   },
   {
-    title: 'Download the ZIP',
+    title: 'Export ZIP',
     body: 'Clips render in real time with per-clip progress and an ETA. Pause or cancel at any point and keep whatever finished.',
   },
 ];
@@ -48,19 +51,19 @@ export interface Capability {
 
 export const capabilities: Capability[] = [
   {
-    label: 'Clip length',
+    label: 'Clip duration',
     detail: '30s / 1m / 2m / 3m presets or any custom value. A short final remainder still becomes its own clip.',
   },
   {
-    label: 'Sequential text',
+    label: 'Auto increment',
     detail: 'Type "Part - 01" once. Every clip renders the next number, with padding, a start value, prefix and suffix.',
   },
   {
-    label: 'Styling',
+    label: 'Text styling',
     detail: 'Font, size, weight, colour, outline, shadow, letter spacing, rotation, background box, opacity and position.',
   },
   {
-    label: 'Layers',
+    label: 'Multiple layers',
     detail: 'Watermark plus counter plus subtitle at once, each animated and styled independently.',
   },
   {
@@ -68,16 +71,16 @@ export const capabilities: Capability[] = [
     detail: 'Fade, slide, zoom or pop, normalised to the clip — so it replays on every segment, not just the first.',
   },
   {
-    label: 'Quality',
-    detail: 'Native resolution, or scaled to 85% / 65% / 45% with matching bitrate targets to trade size for speed.',
+    label: 'Render quality',
+    detail: 'Original (100% native), high (85%), medium (65%) or low (45%), with matching bitrate targets.',
   },
   {
-    label: 'Export',
-    detail: 'One ZIP, zero-padded filenames, ready for an uploader.',
+    label: 'ZIP export',
+    detail: 'One archive with zero-padded filenames, plus per-clip metadata and total size.',
   },
   {
-    label: 'Privacy',
-    detail: 'No upload endpoint and no object storage, because there is no backend at all. Load the page once and it keeps working offline.',
+    label: 'Progress & pause',
+    detail: 'Per-clip progress with an ETA. Pause mid-clip, resume later, or cancel and keep what finished.',
   },
 ];
 

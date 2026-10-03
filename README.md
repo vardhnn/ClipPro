@@ -110,6 +110,14 @@ with `bun run build` and publish `dist/` from the `gh-pages` branch.
 Any other static host (Netlify, Cloudflare Pages) just needs `dist/` and the same
 single rewrite rule.
 
+## Design tokens
+
+`src/theme.ts` holds the product's visual language — page surface, panel and inset
+backgrounds, status chips, the blue icon tile, and every button and input style —
+so the landing page and the tool cannot drift apart. Change a colour there and both
+change together. Fonts are the system sans plus `font-mono` for labels and
+metadata; no webfont is shipped.
+
 ## Tech stack
 
 React 19 · TypeScript (strict) · Vite 6 · Tailwind CSS 4 · JSZip · lucide-react.
@@ -121,6 +129,8 @@ src/
 ├── App.tsx                  # state machine + layout
 ├── types.ts                 # shared domain types
 ├── components/              # uploader, clip settings, overlay editor, modals
+├── theme.ts                 # shared design tokens — surfaces, chips, controls
+├── components/Brand.tsx     # wordmark, used by the app header and the landing page
 ├── landing/                 # marketing page (its own entry: /src/landing/main.tsx)
 │   ├── site.ts              # all landing copy + links
 │   └── components/          # nav, hero, live demo, details, FAQ, footer

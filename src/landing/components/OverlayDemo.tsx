@@ -9,8 +9,11 @@ import {
   useTransform,
 } from 'motion/react';
 import type { TextLayer } from '../../types';
+import { Type } from 'lucide-react';
 import { drawTextLayerOnCanvas } from '../../utils/videoUtils';
 import { SectionHead } from './ui';
+// `text` is aliased: this component has its own `text` state for the overlay string.
+import { chip, control, cx, surface, text as typeScale } from '../../theme';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -182,135 +185,136 @@ export function OverlayDemo() {
 
   return (
     <section id="demo" ref={sectionRef} className="overflow-hidden pb-20 sm:pb-28">
-      <div className="mx-auto w-full max-w-5xl px-5 sm:px-8">
-        <SectionHead label="Live" title="This is the app’s own overlay renderer.">
-          <p>
-            Same <code className="text-gray-300">drawTextLayerOnCanvas()</code> call and
-            the same auto-increment logic — running on a synthetic frame instead of
-            your file, across four back-to-back clips.
-          </p>
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <SectionHead
+          icon={Type}
+          label="Live preview"
+          title="The app’s own overlay renderer, running here."
+        >
+          Same <code className="text-gray-300">drawTextLayerOnCanvas()</code> call and the
+          same auto-increment logic — on a synthetic frame instead of your file, across
+          four back-to-back clips.
         </SectionHead>
       </div>
 
       <m.div
         style={reduce ? undefined : { y: drift }}
-        className="mx-auto mt-12 w-full max-w-[1400px] px-5 sm:px-8"
+        className="mx-auto mt-10 w-full max-w-6xl px-4 sm:px-6 lg:px-8"
       >
-        <div className="overflow-hidden rounded-xl border border-[#1f1f24] bg-[#0b0f16]">
+        <div className="rounded border border-[#222] bg-[#0d0d10] p-3">
           <canvas
             ref={canvasRef}
             width={1280}
             height={720}
-            className="block aspect-video w-full"
+            className="block aspect-video w-full rounded"
           />
         </div>
       </m.div>
 
-      <div className="mx-auto mt-5 w-full max-w-5xl px-5 sm:px-8">
-        <div className="flex items-center gap-4">
-          <div className="h-px flex-1 overflow-hidden rounded-full bg-[#1c1c20]">
-            <m.div style={{ scaleX: progress }} className="h-full origin-left bg-blue-500" />
-          </div>
-          <AnimatePresence mode="wait">
-            <m.span
-              key={clipIndex}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.25, ease: EASE }}
-              className="font-mono text-[11px] tabular-nums text-gray-500"
-            >
-              clip {String(clipIndex + 1).padStart(2, '0')} / {CLIP_COUNT}
-            </m.span>
-          </AnimatePresence>
-        </div>
-
-        <div className="mt-8 flex flex-wrap items-end gap-x-8 gap-y-5">
-          <label className="flex min-w-48 flex-1 flex-col gap-2">
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
-              Text
-            </span>
-            <input
-              value={text}
-              onChange={(event) => setText(event.target.value)}
-              placeholder="Part - 01"
-              className="rounded-md border border-[#26262c] bg-[#101014] px-3 py-2.5 text-sm text-white outline-none transition-colors focus:border-blue-500"
-            />
-          </label>
-
-          <fieldset className="flex flex-col gap-2">
-            <legend className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
-              Position
-            </legend>
-            <div className="relative flex overflow-hidden rounded-md border border-[#26262c] bg-[#101014]">
-              {/* No gap, so the sliding highlight is exactly one third of the track. */}
-              <m.span
-                aria-hidden="true"
-                animate={{ x: `${activePosition * 100}%` }}
-                transition={{ type: 'spring', stiffness: 420, damping: 34 }}
-                className="absolute inset-y-0 left-0 w-1/3 border border-blue-500 bg-blue-600/15"
+      <div className="mx-auto mt-3 w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className={cx(surface.panel, 'p-4')}>
+          <div className="flex items-center gap-3">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#0d0d10] border border-[#333]">
+              <m.div
+                style={{ scaleX: progress }}
+                className="h-full origin-left rounded-full bg-blue-600"
               />
-              {POSITIONS.map((item, index) => {
-                const active = position === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => setPosition(item.id)}
-                    aria-pressed={active}
-                    className={`relative z-10 flex-1 border-r border-[#26262c] px-3.5 py-2 text-xs transition-colors last:border-r-0 ${
-                      active ? 'text-blue-300' : 'text-gray-400 hover:text-white'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                );
-              })}
             </div>
-          </fieldset>
+            <AnimatePresence mode="wait">
+              <m.span
+                key={clipIndex}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.25, ease: EASE }}
+                className={cx(chip.base, chip.blue, 'tabular-nums')}
+              >
+                Clip {clipIndex + 1} of {CLIP_COUNT}
+              </m.span>
+            </AnimatePresence>
+          </div>
 
-          <label className="flex flex-col gap-2">
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
-              Animation
-            </span>
-            <select
-              value={animation}
-              onChange={(event) =>
-                setAnimation(event.target.value as TextLayer['animation'])
-              }
-              className="rounded-md border border-[#26262c] bg-[#101014] px-3 py-2.5 text-sm text-white outline-none transition-colors focus:border-blue-500"
-            >
-              {ANIMATIONS.map((item) => (
-                <option key={item} value={item} className="capitalize">
-                  {item}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <label className="flex flex-col gap-1.5">
+              <span className={typeScale.label}>Text Overlay</span>
+              <input
+                value={text}
+                onChange={(event) => setText(event.target.value)}
+                placeholder="Part - 01"
+                className={control.input}
+              />
+            </label>
 
-          <fieldset className="flex flex-col gap-2">
-            <legend className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
-              Colour
-            </legend>
-            <div className="flex items-center gap-2">
-              {COLORS.map((item) => (
-                <m.button
-                  key={item}
-                  type="button"
-                  onClick={() => setColor(item)}
-                  aria-label={`Use ${item}`}
-                  aria-pressed={color === item}
-                  whileHover={{ scale: 1.12 }}
-                  whileTap={{ scale: 0.94 }}
-                  transition={{ type: 'spring', stiffness: 420, damping: 26 }}
-                  style={{ backgroundColor: item }}
-                  className={`relative size-6 rounded-full ${
-                    color === item ? 'ring-2 ring-white ring-offset-2 ring-offset-[#0a0a0c]' : ''
-                  }`}
+            <fieldset className="flex flex-col gap-1.5">
+              <legend className={typeScale.label}>Position</legend>
+              <div className="relative flex overflow-hidden rounded border border-[#333] bg-[#0d0d10]">
+                {/* No gap, so the sliding highlight is exactly one third of the track. */}
+                <m.span
+                  aria-hidden="true"
+                  animate={{ x: `${activePosition * 100}%` }}
+                  transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                  className="absolute inset-y-0 left-0 w-1/3 bg-blue-600"
                 />
-              ))}
-            </div>
-          </fieldset>
+                {POSITIONS.map((item) => {
+                  const active = position === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => setPosition(item.id)}
+                      aria-pressed={active}
+                      className={cx(
+                        'relative z-10 flex-1 border-r border-[#333] px-2 py-1.5 text-xs font-semibold transition-colors last:border-r-0',
+                        active ? 'text-white' : 'text-gray-300 hover:bg-[#1f1f26]'
+                      )}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <label className="flex flex-col gap-1.5">
+              <span className={typeScale.label}>Entry Animation</span>
+              <select
+                value={animation}
+                onChange={(event) =>
+                  setAnimation(event.target.value as TextLayer['animation'])
+                }
+                className={control.select}
+              >
+                {ANIMATIONS.map((item) => (
+                  <option key={item} value={item} className="capitalize">
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <fieldset className="flex flex-col gap-1.5">
+              <legend className={typeScale.label}>Colour</legend>
+              <div className="flex items-center gap-2 py-0.5">
+                {COLORS.map((item) => (
+                  <m.button
+                    key={item}
+                    type="button"
+                    onClick={() => setColor(item)}
+                    aria-label={`Use ${item}`}
+                    aria-pressed={color === item}
+                    whileHover={{ scale: 1.12 }}
+                    whileTap={{ scale: 0.94 }}
+                    transition={{ type: 'spring', stiffness: 420, damping: 26 }}
+                    style={{ backgroundColor: item }}
+                    className={cx(
+                      'size-6 rounded-full border-2',
+                      color === item ? 'border-white' : 'border-[#333]'
+                    )}
+                  />
+                ))}
+              </div>
+            </fieldset>
+          </div>
         </div>
       </div>
     </section>

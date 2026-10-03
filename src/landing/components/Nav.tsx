@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, m, useScroll, useSpring } from 'motion/react';
+import { Brand } from '../../components/Brand';
+import { chip, control, surface, cx } from '../../theme';
 import { navLinks, site } from '../site';
 
 /**
- * A website header, not an app bar: thin, transparent until you scroll, with a
- * reading-progress hairline pinned to its bottom edge. The mobile menu is a
- * spring-driven sheet instead of a state swap.
+ * The same header the app uses, plus the things a website needs: anchored
+ * navigation, a reading-progress hairline, and a sheet on small screens.
  */
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -25,7 +26,7 @@ export function Nav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close the sheet if the viewport grows past the breakpoint it targets.
+  // Close the sheet once the viewport grows past the breakpoint it targets.
   useEffect(() => {
     if (!open) return;
     const onResize = () => window.innerWidth >= 640 && setOpen(false);
@@ -38,58 +39,44 @@ export function Nav() {
       initial={{ y: -72, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled ? 'border-b border-[#1c1c20] bg-[#0a0a0c]/80 backdrop-blur-xl' : ''
-      }`}
+      className={cx(
+        'fixed inset-x-0 top-0 z-50 transition-colors duration-300',
+        scrolled && cx('border-b border-[#222] bg-[#0a0a0c]/85 backdrop-blur-md')
+      )}
     >
-      <nav className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-6 px-5 sm:px-8">
-        <a href="#top" className="flex shrink-0 items-center gap-2">
-          <m.span
-            whileHover={{ rotate: -90 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="grid size-6 place-items-center rounded-[5px] bg-blue-600 text-[10px] font-bold text-white"
-          >
-            C
-          </m.span>
-          <span className="text-sm font-semibold tracking-tight text-white">
-            CLIP<span className="text-blue-500">PRO</span>
-          </span>
-          <span className="hidden font-mono text-[10px] text-gray-600 sm:inline">
-            {site.version}
-          </span>
+      <nav className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <a href="#top" className="flex-shrink-0">
+          <Brand version={site.version} />
         </a>
 
-        <ul className="hidden items-center gap-7 sm:flex">
+        <ul className="hidden items-center gap-1 sm:flex">
           {navLinks.map((link) => (
             <li key={link.href}>
               <a
                 href={link.href}
-                className="group relative py-1 text-sm text-gray-400 transition-colors hover:text-white"
+                className="rounded px-3 py-2 text-xs font-mono uppercase tracking-wider text-gray-400 transition-colors hover:bg-[#16161a] hover:text-white"
               >
                 {link.label}
-                <span className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100" />
               </a>
             </li>
           ))}
         </ul>
 
-        <div className="flex shrink-0 items-center gap-5">
-          <m.a
+        <div className="flex flex-shrink-0 items-center gap-2">
+          <a
             href={site.repositoryUrl}
             target="_blank"
             rel="noreferrer noopener"
-            whileHover={{ y: -1 }}
-            transition={{ duration: 0.2 }}
-            className="hidden text-sm text-gray-400 transition-colors hover:text-white md:inline"
+            className={cx(chip.base, chip.mono, 'hidden md:inline-flex')}
           >
             GitHub
-          </m.a>
+          </a>
           <m.a
             href={site.appPath}
             whileHover={{ y: -1 }}
             whileTap={{ scale: 0.97 }}
             transition={{ duration: 0.2 }}
-            className="rounded-md bg-blue-600 px-3.5 py-2 text-sm font-medium text-white"
+            className={cx(control.primary, 'inline-flex items-center gap-1.5')}
           >
             Open app
           </m.a>
@@ -98,17 +85,17 @@ export function Nav() {
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-label={open ? 'Close menu' : 'Open menu'}
-            className="-mr-1 flex size-9 flex-col items-center justify-center gap-[5px] sm:hidden"
+            className="flex size-8 flex-col items-center justify-center gap-[5px] rounded border border-[#333] bg-[#22222a] sm:hidden"
           >
             <m.span
               animate={open ? { rotate: 45, y: 3 } : { rotate: 0, y: 0 }}
               transition={{ duration: 0.25 }}
-              className="block h-px w-5 bg-gray-300"
+              className="block h-px w-4 bg-gray-300"
             />
             <m.span
               animate={open ? { rotate: -45, y: -3 } : { rotate: 0, y: 0 }}
               transition={{ duration: 0.25 }}
-              className="block h-px w-5 bg-gray-300"
+              className="block h-px w-4 bg-gray-300"
             />
           </button>
         </div>
@@ -120,32 +107,21 @@ export function Nav() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t border-[#1c1c20] bg-[#0a0a0c]/95 backdrop-blur-xl sm:hidden"
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className={cx('overflow-hidden border-t border-[#222] sm:hidden', surface.footer)}
           >
-            <ul className="flex flex-col px-5 py-3">
+            <ul className="px-4 py-2">
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    className="block py-3 text-base text-gray-300"
+                    className="block rounded px-3 py-2.5 text-xs font-mono uppercase tracking-wider text-gray-400 hover:bg-[#16161a] hover:text-white"
                   >
                     {link.label}
                   </a>
                 </li>
               ))}
-              <li>
-                <a
-                  href={site.repositoryUrl}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  onClick={() => setOpen(false)}
-                  className="block py-3 text-base text-gray-300"
-                >
-                  GitHub
-                </a>
-              </li>
             </ul>
           </m.div>
         )}
@@ -154,7 +130,7 @@ export function Nav() {
       <m.div
         aria-hidden="true"
         style={{ scaleX: progress }}
-        className="h-px origin-left bg-blue-500"
+        className="h-px origin-left bg-blue-600"
       />
     </m.header>
   );

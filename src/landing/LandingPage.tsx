@@ -6,6 +6,7 @@ import { Workflow } from './components/Workflow';
 import { Features } from './components/Features';
 import { Faq } from './components/Faq';
 import { Cta, Footer } from './components/Cta';
+import { surface } from '../theme';
 
 export function LandingPage() {
   return (
@@ -13,7 +14,7 @@ export function LandingPage() {
     // animations are deliberately left out so the animation runtime ships only
     // the code this page actually uses.
     <LazyMotion features={domAnimation} strict>
-      <div className="flex min-h-screen flex-col bg-[#0a0a0c] font-sans text-gray-200 antialiased">
+      <div className={`flex min-h-screen flex-col ${surface.page}`}>
         <Nav />
         <main className="flex-1">
           <Hero />

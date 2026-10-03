@@ -1,29 +1,14 @@
 import type { ReactNode } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { m, useReducedMotion } from 'motion/react';
+import { cx, iconTile, text } from '../../theme';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-export function Section({
-  id,
-  children,
-  className = '',
-}: {
-  id?: string;
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <section id={id} className={`px-5 py-20 sm:px-8 sm:py-28 ${className}`}>
-      <div className="mx-auto w-full max-w-5xl">{children}</div>
-    </section>
-  );
-}
-
-/** Fades and lifts a block into view the first time it crosses the viewport. */
 export function Reveal({
   children,
   delay = 0,
-  y = 20,
+  y = 16,
   className,
 }: {
   children: ReactNode;
@@ -46,20 +31,15 @@ export function Reveal({
   );
 }
 
-/**
- * Parent for <RevealItem>. Children stagger in sequence without each one
- * needing its own delay.
- */
+/** Parent for <RevealItem>; children stagger without each needing a delay. */
 export function RevealGroup({
   children,
   className,
   stagger = 0.07,
-  delay = 0,
 }: {
   children: ReactNode;
   className?: string;
   stagger?: number;
-  delay?: number;
 }) {
   return (
     <m.div
@@ -69,7 +49,7 @@ export function RevealGroup({
       viewport={{ once: true, margin: '-72px' }}
       variants={{
         hidden: {},
-        visible: { transition: { staggerChildren: stagger, delayChildren: delay } },
+        visible: { transition: { staggerChildren: stagger } },
       }}
     >
       {children}
@@ -84,8 +64,8 @@ export function RevealItem({ children, className }: { children: ReactNode; class
     <m.div
       className={className}
       variants={{
-        hidden: { opacity: 0, y: reduce ? 0 : 14 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
+        hidden: { opacity: 0, y: reduce ? 0 : 12 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } },
       }}
     >
       {children}
@@ -94,16 +74,18 @@ export function RevealItem({ children, className }: { children: ReactNode; class
 }
 
 /**
- * Section heading: a hairline that draws itself outward, then the label and
- * title. Replaces the old coloured "eyebrow" pill.
+ * A section heading built from the app's own idiom: a blue icon tile beside an
+ * uppercase label and a bold title, with the same divider above it.
  */
 export function SectionHead({
+  icon: Icon,
   label,
   title,
   children,
 }: {
+  icon: LucideIcon;
   label: string;
-  title: ReactNode;
+  title: string;
   children?: ReactNode;
 }) {
   const reduce = useReducedMotion();
@@ -112,20 +94,29 @@ export function SectionHead({
     <Reveal>
       <m.span
         aria-hidden="true"
-        className="block h-px w-full origin-left bg-[#1c1c20]"
+        className="block h-px w-full origin-left bg-[#222]"
         initial={{ scaleX: reduce ? 1 : 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.9, ease: EASE }}
+        transition={{ duration: 0.8, ease: EASE }}
       />
-      <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.18em] text-gray-600">
-        {label}
-      </p>
-      <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-        {title}
-      </h2>
+
+      <div className="mt-7 flex items-center gap-3">
+        <span className={iconTile}>
+          <Icon className="w-3.5 h-3.5" />
+        </span>
+        <div className="min-w-0">
+          <p className={text.label}>{label}</p>
+          <h2 className="mt-0.5 text-xl font-bold tracking-tight text-white sm:text-2xl">
+            {title}
+          </h2>
+        </div>
+      </div>
+
       {children && (
-        <div className="mt-4 max-w-2xl text-sm leading-relaxed text-gray-400">{children}</div>
+        <p className={cx('mt-4 max-w-2xl leading-relaxed text-gray-400', text.body)}>
+          {children}
+        </p>
       )}
     </Reveal>
   );
