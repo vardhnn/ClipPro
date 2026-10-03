@@ -202,20 +202,20 @@ export function OverlayDemo() {
           four back-to-back clips.
         </SectionHead>
 
-        {/* Two equal columns at every viewport: the frame on the left, its settings
-            on the right, no stacking breakpoint. Both are the same card and
-            both stretch to the row height, so the split reads as a deliberate
-            pair and the two always end on the same line. */}
+        {/* Small screens stack the frame above its settings, because half a phone's
+            width leaves a 16:9 frame too small to read. From lg up they sit side
+            by side at 50/50. The frame carries no card behind it — a panel
+            background only made the video look inset. */}
         <m.div
           style={reduce ? undefined : { y: drift }}
-          className="mt-6 grid grid-cols-2 gap-2 sm:gap-3"
+          className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2"
         >
-        <div className={cx(surface.panel, 'flex items-center justify-center p-3')}>
+        <div className="flex items-center justify-center">
           <canvas
             ref={canvasRef}
             width={1280}
             height={720}
-            className="block w-full rounded bg-[#0b0f16]"
+            className="block w-full rounded border border-[#222] bg-[#0b0f16]"
           />
         </div>
 
