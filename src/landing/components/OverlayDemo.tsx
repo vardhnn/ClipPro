@@ -196,7 +196,6 @@ export function OverlayDemo() {
     <section id="demo" ref={sectionRef} className={cx(layout.section, 'overflow-hidden')}>
       <div className={layout.container}>
         <SectionHead
-
           label="Live preview"
           title="The app’s own overlay renderer, running here."
         >
@@ -205,24 +204,24 @@ export function OverlayDemo() {
           four back-to-back clips.
         </SectionHead>
 
-        {/* Video and settings stay side by side at every breakpoint; the frame is
-            9:16 so the narrow column still gives the canvas a real aspect. The
-            settings panel stretches to the frame's height so the row has no
-            ragged bottom edge. */}
+        {/* Both columns are exactly 50% at every viewport: video on the left,
+            its settings on the right, no stacking breakpoint. The frame is 9:16,
+            so the canvas centres in its cell while the panel stretches to the
+            row height — whichever is taller, both cards end on the same line. */}
         <m.div
           style={reduce ? undefined : { y: drift }}
-          className="mt-6 grid grid-cols-[38%_62%] gap-2 sm:gap-3"
+          className="mt-6 grid grid-cols-2 gap-2 sm:gap-3"
         >
-        <div className="flex justify-center">
+        <div className="flex items-center justify-center">
           <canvas
             ref={canvasRef}
             width={720}
             height={1280}
-            className="block w-full max-w-[220px] rounded border border-[#222] bg-[#0b0f16] sm:max-w-[300px]"
+            className="block w-full max-w-[240px] rounded border border-[#222] bg-[#0b0f16] sm:max-w-[300px]"
           />
         </div>
 
-        <div className={cx(surface.panel, 'flex flex-col gap-4 p-4')}>
+        <div className={cx(surface.panel, 'flex flex-col gap-3 p-3 sm:p-4')}>
           <div className="flex items-center gap-3">
             <div className={cx(surface.inset, 'h-1.5 flex-1 overflow-hidden rounded-full')}>
               <m.div
@@ -244,7 +243,7 @@ export function OverlayDemo() {
             </AnimatePresence>
           </div>
 
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             <label className="flex flex-col gap-1.5">
               <span className={typeScale.label}>Text Overlay</span>
               <input
