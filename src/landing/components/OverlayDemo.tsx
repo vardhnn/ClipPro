@@ -13,7 +13,7 @@ import { Type } from 'lucide-react';
 import { drawTextLayerOnCanvas } from '../../utils/videoUtils';
 import { SectionHead } from './ui';
 // `text` is aliased: this component has its own `text` state for the overlay string.
-import { chip, control, cx, surface, text as typeScale } from '../../theme';
+import { chip, control, cx, layout, surface, text as typeScale } from '../../theme';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -184,8 +184,8 @@ export function OverlayDemo() {
   }, [draw, reduce]);
 
   return (
-    <section id="demo" ref={sectionRef} className="overflow-hidden pb-20 sm:pb-28">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+    <section id="demo" ref={sectionRef} className={cx(layout.section, 'overflow-hidden')}>
+      <div className={layout.container}>
         <SectionHead
           icon={Type}
           label="Live preview"
@@ -197,24 +197,21 @@ export function OverlayDemo() {
         </SectionHead>
       </div>
 
-      <m.div
-        style={reduce ? undefined : { y: drift }}
-        className="mx-auto mt-10 w-full max-w-6xl px-4 sm:px-6 lg:px-8"
-      >
-        <div className="rounded border border-[#222] bg-[#0d0d10] p-3">
+      <m.div style={reduce ? undefined : { y: drift }} className={cx(layout.preview, 'mt-8')}>
+        <div className={cx(surface.inset, 'p-2')}>
           <canvas
             ref={canvasRef}
             width={1280}
             height={720}
-            className="block aspect-video w-full rounded"
+            className="block max-h-[46vh] w-full rounded bg-[#0b0f16] object-contain sm:max-h-[52vh]"
           />
         </div>
       </m.div>
 
-      <div className="mx-auto mt-3 w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className={cx(layout.preview, 'mt-3')}>
         <div className={cx(surface.panel, 'p-4')}>
           <div className="flex items-center gap-3">
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#0d0d10] border border-[#333]">
+            <div className={cx(surface.inset, 'h-1.5 flex-1 overflow-hidden rounded-full')}>
               <m.div
                 style={{ scaleX: progress }}
                 className="h-full origin-left rounded-full bg-blue-600"
@@ -247,7 +244,7 @@ export function OverlayDemo() {
 
             <fieldset className="flex flex-col gap-1.5">
               <legend className={typeScale.label}>Position</legend>
-              <div className="relative flex overflow-hidden rounded border border-[#333] bg-[#0d0d10]">
+              <div className={control.track}>
                 {/* No gap, so the sliding highlight is exactly one third of the track. */}
                 <m.span
                   aria-hidden="true"
@@ -264,7 +261,7 @@ export function OverlayDemo() {
                       onClick={() => setPosition(item.id)}
                       aria-pressed={active}
                       className={cx(
-                        'relative z-10 flex-1 border-r border-[#333] px-2 py-1.5 text-xs font-semibold transition-colors last:border-r-0',
+                        control.segment,
                         active ? 'text-white' : 'text-gray-300 hover:bg-[#1f1f26]'
                       )}
                     >

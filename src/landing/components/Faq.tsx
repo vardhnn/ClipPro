@@ -3,7 +3,7 @@ import { AnimatePresence, m } from 'motion/react';
 import { HelpCircle } from 'lucide-react';
 import { faqs } from '../site';
 import { Reveal, SectionHead } from './ui';
-import { cx, surface } from '../../theme';
+import { cx, layout, surface, text } from '../../theme';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -12,8 +12,8 @@ export function Faq() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
-      <div className="mx-auto w-full max-w-6xl">
+    <section id="faq" className={layout.section}>
+      <div className={layout.container}>
         <SectionHead icon={HelpCircle} label="FAQ" title="The short answers." />
 
         <div className="mt-10 grid gap-3 lg:grid-cols-2 lg:items-start">
@@ -41,7 +41,8 @@ export function Faq() {
                       </span>
                       <span
                         className={cx(
-                          'text-xs font-semibold transition-colors',
+                          text.body,
+                          'font-semibold transition-colors',
                           isOpen ? 'text-white' : 'text-gray-200 hover:text-white'
                         )}
                       >
@@ -67,7 +68,7 @@ export function Faq() {
                         transition={{ duration: 0.34, ease: EASE }}
                         className="overflow-hidden"
                       >
-                        <p className="border-t border-[#222] px-4 py-3 text-xs leading-relaxed text-gray-400">
+                        <p className={cx('border-t border-[#222] px-4 py-3 leading-relaxed text-gray-400', text.body)}>
                           {faq.answer}
                         </p>
                       </m.div>

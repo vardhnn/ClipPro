@@ -1,7 +1,7 @@
 import { Upload, Scissors, Package } from 'lucide-react';
 import { steps } from '../site';
 import { RevealGroup, RevealItem, SectionHead } from './ui';
-import { cx, surface, text } from '../../theme';
+import { cx, layout, numeral, surface, text } from '../../theme';
 
 const ICONS = [Upload, Scissors, Package];
 
@@ -11,8 +11,8 @@ const ICONS = [Upload, Scissors, Package];
  */
 export function Workflow() {
   return (
-    <section id="how" className="px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
-      <div className="mx-auto w-full max-w-6xl">
+    <section id="how" className={layout.section}>
+      <div className={layout.container}>
         <SectionHead icon={Scissors} label="How it works" title="Three steps, no setup." />
 
         <RevealGroup className="mt-10 grid gap-3 sm:grid-cols-3">
@@ -32,18 +32,17 @@ export function Workflow() {
                   <div className="flex items-center gap-3">
                     <span
                       className={cx(
-                        'flex size-6 items-center justify-center rounded text-xs font-bold',
-                        active
-                          ? 'bg-blue-600/20 text-blue-400'
-                          : 'bg-[#22222a] text-gray-500'
+                        numeral.base,
+                        active ? numeral.active : numeral.idle
                       )}
                     >
                       {index + 1}
                     </span>
                     <p
                       className={cx(
-                        'flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider',
-                        active ? 'text-blue-400' : 'text-gray-400'
+                        text.label,
+                        'flex items-center gap-1.5',
+                        active && 'text-blue-400'
                       )}
                     >
                       <Icon className="w-3.5 h-3.5" />

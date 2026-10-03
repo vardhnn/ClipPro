@@ -1,6 +1,6 @@
 import { m, useReducedMotion } from 'motion/react';
 import { Clapperboard, Lock, Terminal } from 'lucide-react';
-import { chip, control, cx, iconTile, text } from '../../theme';
+import { chip, control, cx, iconTile, layout, surface, text } from '../../theme';
 import { site } from '../site';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -10,10 +10,6 @@ const TRUST = [
   { icon: Terminal, label: 'No ffmpeg · no API key', tone: chip.blue },
 ];
 
-/**
- * A website hero, but every part of it is built from the app's own surfaces:
- * the icon tile, the uppercase mono kicker, the format chips from the uploader.
- */
 export function Hero() {
   const reduce = useReducedMotion();
 
@@ -24,8 +20,8 @@ export function Hero() {
   });
 
   return (
-    <section id="top" className="px-4 pt-28 pb-14 sm:px-6 sm:pt-36 sm:pb-20 lg:px-8">
-      <div className="mx-auto w-full max-w-6xl">
+    <section id="top" className={cx(layout.section, 'pt-28 sm:pt-32 lg:pt-36')}>
+      <div className={layout.container}>
         <m.div {...rise(0.05)} className="flex items-center gap-3">
           <span className={iconTile}>
             <Clapperboard className="w-3.5 h-3.5" />
@@ -33,7 +29,7 @@ export function Hero() {
           <p className={text.label}>{site.tagline}</p>
         </m.div>
 
-        <h1 className="mt-6 max-w-3xl text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl">
+        <h1 className={cx('mt-6 max-w-3xl', text.hero)}>
           <m.span {...rise(0.12)} className="block">
             Cut one long video
           </m.span>
@@ -42,22 +38,19 @@ export function Hero() {
           </m.span>
         </h1>
 
-        <m.p
-          {...rise(0.28)}
-          className={cx('mt-6 max-w-2xl text-sm leading-relaxed text-gray-400 sm:text-base', '')}
-        >
+        <m.p {...rise(0.28)} className={cx('mt-6 max-w-2xl', text.lead)}>
           Fixed-length segments, an auto-incrementing overlay burned into each one,
           and a single ZIP at the end. Rendering happens on your machine with Canvas
           and MediaRecorder.
         </m.p>
 
-        <m.div {...rise(0.36)} className="mt-8 flex flex-wrap items-center gap-3">
+        <m.div {...rise(0.36)} className="mt-8 flex flex-wrap items-center gap-2.5">
           <m.a
             href={site.appPath}
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.98 }}
             transition={{ duration: 0.2, ease: EASE }}
-            className={cx(control.primary, 'px-5 py-2.5 text-sm')}
+            className={cx(control.primary, 'inline-flex items-center px-5 py-2.5 text-sm')}
           >
             Start clipping
           </m.a>
@@ -65,16 +58,15 @@ export function Hero() {
             href={site.repositoryUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className={cx(control.secondary, 'px-4 py-2.5')}
+            className={cx(control.secondary, 'inline-flex items-center px-5 py-2.5')}
           >
             View source on GitHub
           </a>
-          <span className={cx(chip.base, chip.mono, 'hidden sm:inline-flex')}>MIT</span>
         </m.div>
 
         <m.div
           {...rise(0.44)}
-          className="mt-10 flex flex-wrap items-center gap-2 border-t border-[#222] pt-6"
+          className={cx('mt-10 flex flex-wrap items-center gap-2 pt-6', surface.divider)}
         >
           {['MP4', 'MOV', 'MKV', 'AVI', 'WebM'].map((format) => (
             <span key={format} className={cx(chip.base, chip.mono)}>
@@ -82,7 +74,7 @@ export function Hero() {
             </span>
           ))}
 
-          <span className="mx-1 hidden h-4 w-px bg-[#222] sm:block" />
+          <span className={cx('hidden sm:block', surface.hairlineVertical, 'mx-1')} />
 
           {TRUST.map(({ icon: Icon, label, tone }) => (
             <span

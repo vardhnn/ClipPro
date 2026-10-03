@@ -133,7 +133,7 @@ src/
 ├── components/Brand.tsx     # wordmark, used by the app header and the landing page
 ├── landing/                 # marketing page (its own entry: /src/landing/main.tsx)
 │   ├── site.ts              # all landing copy + links
-│   └── components/          # nav, hero, live demo, details, FAQ, footer
+│   └── components/          # nav, backdrop, hero, live demo, details, FAQ, footer
 └── utils/
     ├── clipProcessor.ts     # render engine: seek → canvas → MediaRecorder
     ├── videoUtils.ts        # metadata, sample video, canvas text rendering

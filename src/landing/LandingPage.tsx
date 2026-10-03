@@ -1,5 +1,6 @@
 import { LazyMotion, domAnimation } from 'motion/react';
 import { Nav } from './components/Nav';
+import { Backdrop } from './components/Backdrop';
 import { Hero } from './components/Hero';
 import { OverlayDemo } from './components/OverlayDemo';
 import { Workflow } from './components/Workflow';
@@ -14,9 +15,12 @@ export function LandingPage() {
     // animations are deliberately left out so the animation runtime ships only
     // the code this page actually uses.
     <LazyMotion features={domAnimation} strict>
-      <div className={`flex min-h-screen flex-col ${surface.page}`}>
+      {/* `overflow-x-clip` keeps the blurred backdrop from ever producing a
+          horizontal scrollbar on narrow screens. */}
+      <div className={`relative flex min-h-screen flex-col overflow-x-clip ${surface.page}`}>
+        <Backdrop />
         <Nav />
-        <main className="flex-1">
+        <main className="relative z-10 flex-1">
           <Hero />
           <OverlayDemo />
           <Workflow />

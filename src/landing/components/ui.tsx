@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { m, useReducedMotion } from 'motion/react';
-import { cx, iconTile, text } from '../../theme';
+import { cx, iconTile, surface, text } from '../../theme';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -94,7 +94,7 @@ export function SectionHead({
     <Reveal>
       <m.span
         aria-hidden="true"
-        className="block h-px w-full origin-left bg-[#222]"
+        className={cx('block origin-left', surface.hairline)}
         initial={{ scaleX: reduce ? 1 : 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
@@ -107,9 +107,7 @@ export function SectionHead({
         </span>
         <div className="min-w-0">
           <p className={text.label}>{label}</p>
-          <h2 className="mt-0.5 text-xl font-bold tracking-tight text-white sm:text-2xl">
-            {title}
-          </h2>
+          <h2 className={cx('mt-0.5', text.section)}>{title}</h2>
         </div>
       </div>
 

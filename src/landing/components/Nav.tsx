@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, m, useScroll, useSpring } from 'motion/react';
 import { Brand } from '../../components/Brand';
-import { chip, control, surface, cx } from '../../theme';
+import { chip, control, layout, surface, cx } from '../../theme';
 import { navLinks, site } from '../site';
 
 /**
- * The same header the app uses, plus the things a website needs: anchored
- * navigation, a reading-progress hairline, and a sheet on small screens.
+ * The app's header, plus the things a website needs: anchored navigation, a
+ * reading-progress hairline, and a sheet on small screens.
  */
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -41,10 +41,10 @@ export function Nav() {
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className={cx(
         'fixed inset-x-0 top-0 z-50 transition-colors duration-300',
-        scrolled && cx('border-b border-[#222] bg-[#0a0a0c]/85 backdrop-blur-md')
+        scrolled && 'border-b border-[#222] bg-[#0a0a0c]/85 backdrop-blur-md'
       )}
     >
-      <nav className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <nav className={cx(layout.container, 'flex h-14 items-center justify-between gap-3')}>
         <a href="#top" className="flex-shrink-0">
           <Brand version={site.version} />
         </a>
@@ -63,11 +63,13 @@ export function Nav() {
         </ul>
 
         <div className="flex flex-shrink-0 items-center gap-2">
+          {/* Both buttons share control.primary/secondary padding, so their
+              heights match exactly instead of looking uneven next to each other. */}
           <a
             href={site.repositoryUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className={cx(chip.base, chip.mono, 'hidden md:inline-flex')}
+            className={cx(control.secondary, 'hidden md:inline-flex items-center')}
           >
             GitHub
           </a>
@@ -76,7 +78,7 @@ export function Nav() {
             whileHover={{ y: -1 }}
             whileTap={{ scale: 0.97 }}
             transition={{ duration: 0.2 }}
-            className={cx(control.primary, 'inline-flex items-center gap-1.5')}
+            className={cx(control.primary, 'inline-flex items-center')}
           >
             Open app
           </m.a>
@@ -85,18 +87,20 @@ export function Nav() {
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-label={open ? 'Close menu' : 'Open menu'}
-            className="flex size-8 flex-col items-center justify-center gap-[5px] rounded border border-[#333] bg-[#22222a] sm:hidden"
+            className={cx(control.icon, 'sm:hidden')}
           >
-            <m.span
-              animate={open ? { rotate: 45, y: 3 } : { rotate: 0, y: 0 }}
-              transition={{ duration: 0.25 }}
-              className="block h-px w-4 bg-gray-300"
-            />
-            <m.span
-              animate={open ? { rotate: -45, y: -3 } : { rotate: 0, y: 0 }}
-              transition={{ duration: 0.25 }}
-              className="block h-px w-4 bg-gray-300"
-            />
+            <span className="flex flex-col items-center justify-center gap-[5px]">
+              <m.span
+                animate={open ? { rotate: 45, y: 3 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="block h-px w-4 bg-gray-300"
+              />
+              <m.span
+                animate={open ? { rotate: -45, y: -3 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="block h-px w-4 bg-gray-300"
+              />
+            </span>
           </button>
         </div>
       </nav>
@@ -122,6 +126,17 @@ export function Nav() {
                   </a>
                 </li>
               ))}
+              <li>
+                <a
+                  href={site.repositoryUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  onClick={() => setOpen(false)}
+                  className={cx(control.secondary, 'my-2 flex items-center justify-center')}
+                >
+                  GitHub
+                </a>
+              </li>
             </ul>
           </m.div>
         )}
