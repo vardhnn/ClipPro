@@ -1,7 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  AnimatePresence,
+  m,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from 'motion/react';
 import type { TextLayer } from '../../types';
 import { drawTextLayerOnCanvas } from '../../utils/videoUtils';
-import { Section, SectionLabel, SectionTitle } from './ui';
+import { SectionHead } from './ui';
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 const POSITIONS = [
   { id: 'top', label: 'Top', y: 18 },
@@ -13,20 +24,37 @@ type PositionId = (typeof POSITIONS)[number]['id'];
 
 const ANIMATIONS: TextLayer['animation'][] = ['none', 'fade', 'slide', 'zoom', 'pop'];
 const COLORS = ['#ffffff', '#38bdf8', '#f472b6', '#facc15'];
+
 const CLIP_SECONDS = 3;
+const CLIP_COUNT = 4;
 
 /**
- * The canvas is not a mockup: it is painted by the same
- * `drawTextLayerOnCanvas` the app calls on your video, so what you change here
- * is exactly what gets burned into a real clip.
+ * Not a mockup. The canvas is painted by the same `drawTextLayerOnCanvas` call
+ * the app makes on your video, cycling through four clips so the auto-increment
+ * and the per-clip animation reset are both visible.
  */
 export function OverlayDemo() {
+  const sectionRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const reduce = useReducedMotion();
+
   const [text, setText] = useState('Part - 01');
   const [position, setPosition] = useState<PositionId>('bottom');
   const [animation, setAnimation] = useState<TextLayer['animation']>('fade');
   const [color, setColor] = useState(COLORS[0]);
-  const [playing, setPlaying] = useState(true);
+  const [clipIndex, setClipIndex] = useState(0);
+  const activePosition = POSITIONS.findIndex((item) => item.id === position);
+
+  // Written straight from the render loop, so the bar animates at frame rate
+  // without re-rendering React on every frame.
+  const rawProgress = useMotionValue(0);
+  const progress = useSpring(rawProgress, { stiffness: 260, damping: 40 });
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+  const drift = useTransform(scrollYProgress, [0, 1], [56, -56]);
 
   const layer = useMemo<TextLayer>(
     () => ({
@@ -62,66 +90,83 @@ export function OverlayDemo() {
 
   const layerRef = useRef(layer);
   layerRef.current = layer;
+  const clipRef = useRef(clipIndex);
+  clipRef.current = clipIndex;
 
-  const draw = useCallback((elapsedSeconds: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+  const draw = useCallback(
+    (elapsedSeconds: number) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    const { width, height } = canvas;
+      const { width, height } = canvas;
 
-    // Stand-in footage, so the overlay has something to sit on.
-    const backdrop = ctx.createLinearGradient(0, 0, width, height);
-    backdrop.addColorStop(0, '#132033');
-    backdrop.addColorStop(1, '#0b0f16');
-    ctx.fillStyle = backdrop;
-    ctx.fillRect(0, 0, width, height);
+      const backdrop = ctx.createLinearGradient(0, 0, width, height);
+      backdrop.addColorStop(0, '#132033');
+      backdrop.addColorStop(1, '#0b0f16');
+      ctx.fillStyle = backdrop;
+      ctx.fillRect(0, 0, width, height);
 
-    const t = elapsedSeconds % CLIP_SECONDS;
+      const loopSeconds = CLIP_SECONDS * CLIP_COUNT;
+      const t = elapsedSeconds % loopSeconds;
+      const index = Math.floor(t / CLIP_SECONDS);
+      const clipProgress = (t % CLIP_SECONDS) / CLIP_SECONDS;
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-    ctx.lineWidth = 1;
-    for (let x = 0; x < width; x += 64) {
+      rawProgress.set(t / loopSeconds);
+
+      if (index !== clipRef.current) {
+        clipRef.current = index;
+        setClipIndex(index);
+      }
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < width; x += 64) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += 64) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      const barWidth = width / 26;
+      for (let i = 0; i < 24; i++) {
+        const barHeight = 40 + Math.abs(Math.sin(t * 3 + i * 0.6)) * (height * 0.22);
+        ctx.fillStyle = `rgba(96, 165, 250, ${0.18 + (i % 5) * 0.05})`;
+        ctx.fillRect(
+          width * 0.08 + i * barWidth,
+          height * 0.72 - barHeight,
+          barWidth * 0.55,
+          barHeight
+        );
+      }
+
       ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
-      ctx.stroke();
-    }
-    for (let y = 0; y < height; y += 64) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
-      ctx.stroke();
-    }
+      ctx.arc(
+        width * 0.72 + Math.cos(t * 1.4) * 90,
+        height * 0.34 + Math.sin(t * 1.9) * 50,
+        120 + Math.sin(t * 2.2) * 24,
+        0,
+        Math.PI * 2
+      );
+      ctx.fillStyle = 'rgba(59, 130, 246, 0.22)';
+      ctx.fill();
 
-    const barWidth = width / 26;
-    for (let i = 0; i < 24; i++) {
-      const barHeight = 40 + Math.abs(Math.sin(t * 3 + i * 0.6)) * (height * 0.22);
-      ctx.fillStyle = `rgba(96, 165, 250, ${0.18 + (i % 5) * 0.05})`;
-      ctx.fillRect(width * 0.08 + i * barWidth, height * 0.72 - barHeight, barWidth * 0.55, barHeight);
-    }
-
-    ctx.beginPath();
-    ctx.arc(
-      width * 0.72 + Math.cos(t * 1.4) * 90,
-      height * 0.34 + Math.sin(t * 1.9) * 50,
-      120 + Math.sin(t * 2.2) * 24,
-      0,
-      Math.PI * 2
-    );
-    ctx.fillStyle = 'rgba(59, 130, 246, 0.22)';
-    ctx.fill();
-
-    // Clip-relative progress is what drives the entry animation.
-    drawTextLayerOnCanvas(ctx, layerRef.current, 0, width, height, t / CLIP_SECONDS);
-  }, []);
+      // Real call into the app, with the live clip index and clip-relative time.
+      drawTextLayerOnCanvas(ctx, layerRef.current, index, width, height, clipProgress);
+    },
+    [rawProgress]
+  );
 
   useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (!playing || reduced) {
-      draw(0.9);
+    if (reduce) {
+      draw(CLIP_SECONDS + 1.2);
       return;
     }
 
@@ -133,110 +178,141 @@ export function OverlayDemo() {
     };
     frame = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(frame);
-  }, [draw, playing]);
+  }, [draw, reduce]);
 
   return (
-    <Section id="demo">
-      <SectionLabel>Live</SectionLabel>
-      <SectionTitle>This is the app&rsquo;s own overlay renderer.</SectionTitle>
-      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-gray-400">
-        Same <code className="text-gray-300">drawTextLayerOnCanvas()</code> call, same
-        auto-increment logic — just running on a synthetic frame instead of your file.
-      </p>
-
-      <div className="mt-8 overflow-hidden rounded-xl border border-[#1f1f24]">
-        <canvas
-          ref={canvasRef}
-          width={1280}
-          height={720}
-          className="block aspect-video w-full"
-        />
+    <section id="demo" ref={sectionRef} className="overflow-hidden pb-20 sm:pb-28">
+      <div className="mx-auto w-full max-w-5xl px-5 sm:px-8">
+        <SectionHead label="Live" title="This is the app’s own overlay renderer.">
+          <p>
+            Same <code className="text-gray-300">drawTextLayerOnCanvas()</code> call and
+            the same auto-increment logic — running on a synthetic frame instead of
+            your file, across four back-to-back clips.
+          </p>
+        </SectionHead>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-end gap-x-8 gap-y-4">
-        <label className="flex min-w-48 flex-1 flex-col gap-1.5">
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
-            Text
-          </span>
-          <input
-            value={text}
-            onChange={(event) => setText(event.target.value)}
-            placeholder="Part - 01"
-            className="rounded-md border border-[#26262c] bg-[#101014] px-3 py-2 text-sm text-white outline-none transition-colors focus:border-blue-500"
+      <m.div
+        style={reduce ? undefined : { y: drift }}
+        className="mx-auto mt-12 w-full max-w-[1400px] px-5 sm:px-8"
+      >
+        <div className="overflow-hidden rounded-xl border border-[#1f1f24] bg-[#0b0f16]">
+          <canvas
+            ref={canvasRef}
+            width={1280}
+            height={720}
+            className="block aspect-video w-full"
           />
-        </label>
+        </div>
+      </m.div>
 
-        <fieldset className="flex flex-col gap-1.5">
-          <legend className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
-            Position
-          </legend>
-          <div className="flex gap-1.5">
-            {POSITIONS.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setPosition(item.id)}
-                aria-pressed={position === item.id}
-                className={`rounded-md border px-3 py-2 text-xs transition-colors ${
-                  position === item.id
-                    ? 'border-blue-500 bg-blue-600/15 text-blue-300'
-                    : 'border-[#26262c] bg-[#101014] text-gray-400 hover:text-white'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+      <div className="mx-auto mt-5 w-full max-w-5xl px-5 sm:px-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 overflow-hidden rounded-full bg-[#1c1c20]">
+            <m.div style={{ scaleX: progress }} className="h-full origin-left bg-blue-500" />
           </div>
-        </fieldset>
+          <AnimatePresence mode="wait">
+            <m.span
+              key={clipIndex}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.25, ease: EASE }}
+              className="font-mono text-[11px] tabular-nums text-gray-500"
+            >
+              clip {String(clipIndex + 1).padStart(2, '0')} / {CLIP_COUNT}
+            </m.span>
+          </AnimatePresence>
+        </div>
 
-        <label className="flex flex-col gap-1.5">
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
-            Animation
-          </span>
-          <select
-            value={animation}
-            onChange={(event) =>
-              setAnimation(event.target.value as TextLayer['animation'])
-            }
-            className="rounded-md border border-[#26262c] bg-[#101014] px-3 py-2 text-sm text-white outline-none transition-colors focus:border-blue-500"
-          >
-            {ANIMATIONS.map((item) => (
-              <option key={item} value={item} className="capitalize">
-                {item}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="mt-8 flex flex-wrap items-end gap-x-8 gap-y-5">
+          <label className="flex min-w-48 flex-1 flex-col gap-2">
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
+              Text
+            </span>
+            <input
+              value={text}
+              onChange={(event) => setText(event.target.value)}
+              placeholder="Part - 01"
+              className="rounded-md border border-[#26262c] bg-[#101014] px-3 py-2.5 text-sm text-white outline-none transition-colors focus:border-blue-500"
+            />
+          </label>
 
-        <fieldset className="flex flex-col gap-1.5">
-          <legend className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
-            Colour
-          </legend>
-          <div className="flex items-center gap-2">
-            {COLORS.map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => setColor(item)}
-                aria-label={`Use ${item}`}
-                aria-pressed={color === item}
-                style={{ backgroundColor: item }}
-                className={`size-6 rounded-full border-2 transition-transform ${
-                  color === item ? 'scale-110 border-white' : 'border-transparent'
-                }`}
+          <fieldset className="flex flex-col gap-2">
+            <legend className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
+              Position
+            </legend>
+            <div className="relative flex overflow-hidden rounded-md border border-[#26262c] bg-[#101014]">
+              {/* No gap, so the sliding highlight is exactly one third of the track. */}
+              <m.span
+                aria-hidden="true"
+                animate={{ x: `${activePosition * 100}%` }}
+                transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                className="absolute inset-y-0 left-0 w-1/3 border border-blue-500 bg-blue-600/15"
               />
-            ))}
-          </div>
-        </fieldset>
+              {POSITIONS.map((item, index) => {
+                const active = position === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setPosition(item.id)}
+                    aria-pressed={active}
+                    className={`relative z-10 flex-1 border-r border-[#26262c] px-3.5 py-2 text-xs transition-colors last:border-r-0 ${
+                      active ? 'text-blue-300' : 'text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
 
-        <button
-          type="button"
-          onClick={() => setPlaying((value) => !value)}
-          className="ml-auto rounded-md border border-[#26262c] bg-[#101014] px-3 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-gray-400 transition-colors hover:text-white"
-        >
-          {playing ? 'Pause' : 'Play'}
-        </button>
+          <label className="flex flex-col gap-2">
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
+              Animation
+            </span>
+            <select
+              value={animation}
+              onChange={(event) =>
+                setAnimation(event.target.value as TextLayer['animation'])
+              }
+              className="rounded-md border border-[#26262c] bg-[#101014] px-3 py-2.5 text-sm text-white outline-none transition-colors focus:border-blue-500"
+            >
+              {ANIMATIONS.map((item) => (
+                <option key={item} value={item} className="capitalize">
+                  {item}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <fieldset className="flex flex-col gap-2">
+            <legend className="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-600">
+              Colour
+            </legend>
+            <div className="flex items-center gap-2">
+              {COLORS.map((item) => (
+                <m.button
+                  key={item}
+                  type="button"
+                  onClick={() => setColor(item)}
+                  aria-label={`Use ${item}`}
+                  aria-pressed={color === item}
+                  whileHover={{ scale: 1.12 }}
+                  whileTap={{ scale: 0.94 }}
+                  transition={{ type: 'spring', stiffness: 420, damping: 26 }}
+                  style={{ backgroundColor: item }}
+                  className={`relative size-6 rounded-full ${
+                    color === item ? 'ring-2 ring-white ring-offset-2 ring-offset-[#0a0a0c]' : ''
+                  }`}
+                />
+              ))}
+            </div>
+          </fieldset>
+        </div>
       </div>
-    </Section>
+    </section>
   );
 }

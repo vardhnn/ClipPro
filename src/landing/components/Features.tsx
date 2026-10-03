@@ -1,22 +1,25 @@
 import { capabilities } from '../site';
-import { Section, SectionLabel, SectionTitle } from './ui';
+import { RevealGroup, RevealItem, SectionHead } from './ui';
 
 export function Features() {
   return (
-    <Section id="details" className="border-t border-[#1c1c20]">
-      <SectionLabel>Details</SectionLabel>
-      <SectionTitle>What it actually does.</SectionTitle>
+    <section id="details" className="border-t border-[#1c1c20] px-5 py-20 sm:px-8 sm:py-28">
+      <div className="mx-auto w-full max-w-5xl">
+        <SectionHead label="Details" title="What it actually does." />
 
-      <dl className="mt-10 grid gap-x-12 gap-y-7 sm:grid-cols-2">
-        {capabilities.map((item) => (
-          <div key={item.label} className="border-t border-[#1c1c20] pt-4">
-            <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-gray-500">
-              {item.label}
-            </dt>
-            <dd className="mt-2 text-sm leading-relaxed text-gray-400">{item.detail}</dd>
-          </div>
-        ))}
-      </dl>
-    </Section>
+        <RevealGroup className="mt-12 grid gap-x-12 gap-y-8 sm:grid-cols-2">
+          {capabilities.map((item) => (
+            <RevealItem key={item.label}>
+              <div className="border-t border-[#1c1c20] pt-4">
+                <h3 className="font-mono text-[11px] uppercase tracking-[0.18em] text-gray-500">
+                  {item.label}
+                </h3>
+                <p className="mt-2.5 text-sm leading-relaxed text-gray-400">{item.detail}</p>
+              </div>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </div>
+    </section>
   );
 }

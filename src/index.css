@@ -25,12 +25,40 @@
   }
 }
 
-/* The FAQ uses native <details>; hide the default triangle in favour of the + marker. */
-summary::-webkit-details-marker {
-  display: none;
+html {
+  /* Anchor links glide instead of jumping. */
+  scroll-behavior: smooth;
+  /* The sticky header must not cover the heading you jumped to. */
+  scroll-padding-top: 5rem;
 }
 
 body {
   background-color: #0a0a0c;
   color: #e2e8f0;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: rgb(37 99 235 / 0.35);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Respect the OS setting everywhere, including the CSS scroll behaviour. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

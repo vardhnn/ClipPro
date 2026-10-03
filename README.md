@@ -113,8 +113,8 @@ single rewrite rule.
 ## Tech stack
 
 React 19 · TypeScript (strict) · Vite 6 · Tailwind CSS 4 · JSZip · lucide-react.
-No animation, charting or CSS-in-JS runtime — the landing page is plain Tailwind
-and the browser's own APIs.
+Motion is loaded through `LazyMotion` with only the DOM animation features the
+landing page uses, and every effect respects `prefers-reduced-motion`.
 
 ```
 src/

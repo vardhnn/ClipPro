@@ -1,28 +1,37 @@
+import { m, useReducedMotion } from 'motion/react';
 import { steps } from '../site';
-import { Section, SectionLabel, SectionTitle } from './ui';
+import { RevealGroup, RevealItem, SectionHead } from './ui';
 
 export function Workflow() {
-  return (
-    <Section id="how" className="border-t border-[#1c1c20]">
-      <SectionLabel>How it works</SectionLabel>
-      <SectionTitle>Three steps, no setup.</SectionTitle>
+  const reduce = useReducedMotion();
 
-      <ol className="mt-10 max-w-3xl">
-        {steps.map((step, index) => (
-          <li
-            key={step.title}
-            className="flex flex-col gap-2 border-t border-[#1c1c20] py-6 sm:flex-row sm:gap-8"
-          >
-            <span className="font-mono text-xs text-gray-600 sm:w-8 sm:shrink-0">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-            <div>
-              <h3 className="text-sm font-medium text-white">{step.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-gray-400">{step.body}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-    </Section>
+  return (
+    <section id="how" className="border-t border-[#1c1c20] px-5 py-20 sm:px-8 sm:py-28">
+      <div className="mx-auto w-full max-w-5xl">
+        <SectionHead label="How it works" title="Three steps, no setup." />
+
+        <RevealGroup className="mt-12 max-w-4xl">
+          {steps.map((step, index) => (
+            <RevealItem key={step.title}>
+              <div className="grid grid-cols-[2.25rem_1fr] gap-x-4 border-t border-[#1c1c20] py-7 sm:grid-cols-[3rem_1fr] sm:gap-x-6">
+                <m.span
+                  initial={{ opacity: 0, x: reduce ? 0 : -6 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.15 }}
+                  className="font-mono text-xs leading-6 text-gray-600"
+                >
+                  {String(index + 1).padStart(2, '0')}
+                </m.span>
+                <div>
+                  <h3 className="text-sm font-medium text-white">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-400">{step.body}</p>
+                </div>
+              </div>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </div>
+    </section>
   );
 }
