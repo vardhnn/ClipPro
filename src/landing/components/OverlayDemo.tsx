@@ -202,15 +202,14 @@ export function OverlayDemo() {
           four back-to-back clips.
         </SectionHead>
 
-        {/* Small screens stack the frame above its settings, because half a phone's
-            width leaves a 16:9 frame too small to read. From lg up they sit side
-            by side at 50/50, and both cards are locked to the same 16:9 box so
-            the pair lines up exactly. */}
+        {/* Phones stack the frame above its settings; from md up — phone landscape,
+            tablets, desktops — the pair sits side by side at 50/50 with both
+            cards locked to the same 16:9 box. */}
         <m.div
           style={reduce ? undefined : { y: drift }}
-          className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-2"
+          className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2"
         >
-        <div className="flex items-center justify-center lg:aspect-video">
+        <div className="flex items-center justify-center md:aspect-video">
           <canvas
             ref={canvasRef}
             width={1280}
@@ -222,7 +221,7 @@ export function OverlayDemo() {
         <div
           className={cx(
             surface.panel,
-            'flex flex-col gap-3 p-3 sm:p-4 lg:aspect-video lg:justify-center'
+            'flex flex-col gap-2 p-3 md:aspect-video md:justify-center'
           )}
         >
           <div className="flex items-center gap-3">
@@ -246,9 +245,11 @@ export function OverlayDemo() {
             </AnimatePresence>
           </div>
 
-          {/* Two fields share the first row; the segmented control and the swatches
-              take a full row each so the track never gets squeezed. Laid out
-              this way the card fits a 16:9 box with room to spare. */}
+          {/* Two rows of controls, not four: the card has to fit a 16:9 box at md,
+              where a half-width column is only ~350px. Text and animation share
+              the first row; position and colour share the second, with the
+              segmented track weighted wider so it is never squeezed. */}
+            <div className="grid gap-2">
             <div className="grid grid-cols-2 gap-3">
             <label className="flex flex-col gap-1.5">
               <span className={typeScale.label}>Text Overlay</span>
@@ -276,8 +277,10 @@ export function OverlayDemo() {
                 ))}
               </select>
             </label>
+            </div>
 
-            <fieldset className="col-span-2 flex flex-col gap-1.5">
+            <div className="grid grid-cols-[2fr_1fr] gap-3">
+            <fieldset className="flex flex-col gap-1.5">
               <legend className={typeScale.label}>Position</legend>
               <div className={control.track}>
                 {/* No gap, so the sliding highlight is exactly one third of the track. */}
@@ -307,7 +310,7 @@ export function OverlayDemo() {
               </div>
             </fieldset>
 
-            <fieldset className="col-span-2 flex flex-col gap-1.5">
+            <fieldset className="flex flex-col gap-1.5">
               <legend className={typeScale.label}>Colour</legend>
               <div className="flex items-center gap-2 py-0.5">
                 {COLORS.map((item) => (
@@ -329,6 +332,7 @@ export function OverlayDemo() {
                 ))}
               </div>
             </fieldset>
+            </div>
           </div>
         </div>
       </m.div>
