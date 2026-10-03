@@ -15,6 +15,12 @@ export function cx(...parts: Array<string | false | null | undefined>): string {
 export const surface = {
   /** Page background, including the dotted grid the app sits on. */
   page: 'bg-[#0a0a0c] text-gray-200 font-sans antialiased bg-grid-pattern',
+  /**
+   * Landing page background. No `bg-grid-pattern` here: the dot field is drawn
+   * on a canvas so it can react to the cursor, and the CSS grid would sit
+   * underneath it as a second, static set of dots.
+   */
+  pageCanvas: 'bg-[#0a0a0c] text-gray-200 font-sans antialiased',
   /** Raised content card. */
   panel: 'bg-[#16161a] border border-[#222] rounded shadow-sm',
   /** Recessed area inside a panel — media frames, tracks, bars. */
@@ -90,9 +96,7 @@ export const accent = {
 /** One breakpoint-driven container, so every band lines up. */
 export const layout = {
   container: 'mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8',
-  section: 'py-12 sm:py-16',
-  /** Narrower measure for the live preview so it reads as a widget, not a hero. */
-  preview: 'mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8',
+  section: 'py-8 sm:py-12',
   /** Centred stack used by the hero and every section heading. */
   centerStack: 'flex flex-col items-center text-center',
 } as const;

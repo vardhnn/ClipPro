@@ -16,7 +16,7 @@ export function Faq() {
       <div className={layout.container}>
         <SectionHead icon={HelpCircle} label="FAQ" title="The short answers." />
 
-        <div className="mt-8 grid gap-3 lg:grid-cols-2 lg:items-stretch">
+        <div className="mt-6 grid gap-3 lg:grid-cols-2 lg:items-stretch">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
 

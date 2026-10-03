@@ -195,21 +195,21 @@ export function OverlayDemo() {
           same auto-increment logic — on a synthetic frame instead of your file, across
           four back-to-back clips.
         </SectionHead>
-      </div>
 
-      <m.div style={reduce ? undefined : { y: drift }} className={cx(layout.preview, 'mt-7')}>
+        <m.div
+          style={reduce ? undefined : { y: drift }}
+          className="mt-6 grid gap-3 lg:grid-cols-[1.55fr_1fr] lg:items-start"
+        >
         <div className={cx(surface.inset, 'p-2')}>
           <canvas
             ref={canvasRef}
             width={1280}
             height={720}
-            className="block max-h-[46vh] w-full rounded bg-[#0b0f16] object-contain sm:max-h-[52vh]"
+            className="block w-full rounded bg-[#0b0f16]"
           />
         </div>
-      </m.div>
 
-      <div className={cx(layout.preview, 'mt-3')}>
-        <div className={cx(surface.panel, 'p-4')}>
+        <div className={cx(surface.panel, 'flex flex-col gap-4 p-4')}>
           <div className="flex items-center gap-3">
             <div className={cx(surface.inset, 'h-1.5 flex-1 overflow-hidden rounded-full')}>
               <m.div
@@ -231,7 +231,7 @@ export function OverlayDemo() {
             </AnimatePresence>
           </div>
 
-          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4">
             <label className="flex flex-col gap-1.5">
               <span className={typeScale.label}>Text Overlay</span>
               <input
@@ -313,6 +313,7 @@ export function OverlayDemo() {
             </fieldset>
           </div>
         </div>
+      </m.div>
       </div>
     </section>
   );

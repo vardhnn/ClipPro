@@ -1,10 +1,10 @@
 import { m, useReducedMotion } from 'motion/react';
 
 /**
- * Ambient page background: three heavily blurred colour washes drifting on very
- * long loops, so it reads as light moving behind a dark surface rather than as
- * an animated graphic. Fixed so it never scrolls, and pinned behind every
- * content layer. Under `prefers-reduced-motion` it renders once and stops.
+ * Ambient light behind the content: three heavily blurred colour washes drifting
+ * on very long loops, so it reads as light moving behind a dark surface rather
+ * than as an animated graphic. Fixed so it never scrolls, and pinned behind
+ * every content layer. Under `prefers-reduced-motion` it renders once and stops.
  */
 export function Backdrop() {
   const reduce = useReducedMotion();
@@ -28,9 +28,6 @@ export function Backdrop() {
         animate={reduce ? undefined : { y: ['8%', '-8%', '8%'] }}
         transition={{ duration: 38, repeat: Infinity, ease: 'easeInOut' }}
       />
-
-      {/* A soft vignette pulls the eye back to the centre column. */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,transparent_35%,#0a0a0c_85%)]" />
     </div>
   );
 }

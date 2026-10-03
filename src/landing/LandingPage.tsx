@@ -1,6 +1,7 @@
 import { LazyMotion, domAnimation } from 'motion/react';
 import { Nav } from './components/Nav';
 import { Backdrop } from './components/Backdrop';
+import { DotField } from './components/DotField';
 import { Hero } from './components/Hero';
 import { OverlayDemo } from './components/OverlayDemo';
 import { Workflow } from './components/Workflow';
@@ -17,8 +18,9 @@ export function LandingPage() {
     <LazyMotion features={domAnimation} strict>
       {/* `overflow-x-clip` keeps the blurred backdrop from ever producing a
           horizontal scrollbar on narrow screens. */}
-      <div className={`relative flex min-h-screen flex-col overflow-x-clip ${surface.page}`}>
+      <div className={`relative flex min-h-screen flex-col overflow-x-clip ${surface.pageCanvas}`}>
         <Backdrop />
+        <DotField />
         <Nav />
         <main className="relative z-10 flex-1">
           <Hero />

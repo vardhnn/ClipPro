@@ -15,7 +15,7 @@ export function Workflow() {
       <div className={layout.container}>
         <SectionHead icon={Scissors} label="How it works" title="Three steps, no setup." />
 
-        <RevealGroup className="mt-8 grid gap-3 sm:grid-cols-3">
+        <RevealGroup className="mt-6 grid gap-3 sm:grid-cols-3">
           {steps.map((step, index) => {
             const Icon = ICONS[index];
             const active = index === 0;

@@ -1,6 +1,6 @@
 import { m, useReducedMotion } from 'motion/react';
-import { Clapperboard, Github } from 'lucide-react';
-import { control, cx, iconTile, layout, text } from '../../theme';
+import { Github } from 'lucide-react';
+import { control, cx, layout, text } from '../../theme';
 import { site } from '../site';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -17,30 +17,23 @@ export function Hero() {
   return (
     <section id="top" className={cx(layout.section, 'pt-24 sm:pt-28')}>
       <div className={cx(layout.container, layout.centerStack)}>
-        <m.div {...rise(0.05)} className="flex items-center gap-3">
-          <span className={iconTile}>
-            <Clapperboard className="w-3.5 h-3.5" />
-          </span>
-          <p className={text.label}>{site.tagline}</p>
-        </m.div>
-
-        <h1 className={cx('mt-5 max-w-3xl', text.hero)}>
-          <m.span {...rise(0.12)} className="block">
+        <h1 className={cx('max-w-3xl', text.hero)}>
+          <m.span {...rise(0.05)} className="block">
             Cut one long video
           </m.span>
-          <m.span {...rise(0.2)} className="block">
+          <m.span {...rise(0.13)} className="block">
             into numbered clips.
           </m.span>
         </h1>
 
-        <m.p {...rise(0.28)} className={cx('mt-5 max-w-xl', text.lead)}>
+        <m.p {...rise(0.21)} className={cx('mt-5 max-w-xl', text.lead)}>
           Fixed-length segments, an auto-incrementing overlay burned into each one,
           and a single ZIP at the end. Rendering happens on your machine with Canvas
           and MediaRecorder.
         </m.p>
 
         <m.div
-          {...rise(0.36)}
+          {...rise(0.29)}
           className="mt-7 flex flex-wrap items-center justify-center gap-2.5"
         >
           <m.a
