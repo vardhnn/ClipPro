@@ -8,7 +8,7 @@ import { ExportSection } from './components/ExportSection';
 import { ShortcutsModal } from './components/ShortcutsModal';
 
 import { ClipConfig, ExportSummary, ProcessingState, TextLayer, VideoMetadata } from './types';
-import { extractVideoMetadata, generateSampleDemoVideo } from './utils/videoUtils';
+import { extractVideoMetadata } from './utils/videoUtils';
 import { getClipDurationSeconds, processVideoClips } from './utils/clipProcessor';
 import { Film } from 'lucide-react';
 
@@ -95,21 +95,6 @@ export default function App() {
       setExportSummary(null);
     } catch (err) {
       alert((err as Error).message || 'Failed to load video file.');
-    } finally {
-      setIsLoadingMetadata(false);
-    }
-  };
-
-  // Load sample demo video handler
-  const handleLoadSample = async () => {
-    setIsLoadingMetadata(true);
-    try {
-      const sampleFile = await generateSampleDemoVideo();
-      const meta = await extractVideoMetadata(sampleFile);
-      setVideoMetadata(meta);
-      setExportSummary(null);
-    } catch (err) {
-      alert('Failed to generate sample demo video: ' + (err as Error).message);
     } finally {
       setIsLoadingMetadata(false);
     }
@@ -218,7 +203,6 @@ export default function App() {
       <Header
         darkMode={darkMode}
         setDarkMode={setDarkMode}
-        onLoadSample={handleLoadSample}
         onOpenShortcuts={() => setShortcutsOpen(true)}
         onReset={handleReset}
         hasVideo={!!videoMetadata}
@@ -281,7 +265,6 @@ export default function App() {
             <VideoUploader
               videoMetadata={videoMetadata}
               onVideoSelect={handleVideoSelect}
-              onLoadSample={handleLoadSample}
               isLoading={isLoadingMetadata}
               onClearVideo={handleReset}
             />

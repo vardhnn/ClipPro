@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { m, useReducedMotion } from 'motion/react';
-import { cx, iconTile, surface, text } from '../../theme';
+import { cx, iconTile, layout, surface, text } from '../../theme';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -74,8 +74,8 @@ export function RevealItem({ children, className }: { children: ReactNode; class
 }
 
 /**
- * A section heading built from the app's own idiom: a blue icon tile beside an
- * uppercase label and a bold title, with the same divider above it.
+ * A centred section heading built from the app's own idiom: the blue icon tile
+ * above an uppercase label and a bold title, over a rule that draws itself in.
  */
 export function SectionHead({
   icon: Icon,
@@ -91,28 +91,28 @@ export function SectionHead({
   const reduce = useReducedMotion();
 
   return (
-    <Reveal>
+    <Reveal className={layout.centerStack}>
       <m.span
         aria-hidden="true"
-        className={cx('block origin-left', surface.hairline)}
+        className={cx('block origin-center', surface.hairline)}
         initial={{ scaleX: reduce ? 1 : 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, ease: EASE }}
       />
 
-      <div className="mt-7 flex items-center gap-3">
+      <div className="mt-6 flex flex-col items-center gap-3">
         <span className={iconTile}>
           <Icon className="w-3.5 h-3.5" />
         </span>
-        <div className="min-w-0">
-          <p className={text.label}>{label}</p>
-          <h2 className={cx('mt-0.5', text.section)}>{title}</h2>
-        </div>
+        <p className={text.label}>{label}</p>
+        <h2 className={cx('text-xl font-bold tracking-tight text-white sm:text-2xl')}>
+          {title}
+        </h2>
       </div>
 
       {children && (
-        <p className={cx('mt-4 max-w-2xl leading-relaxed text-gray-400', text.body)}>
+        <p className={cx('mt-3 max-w-xl leading-relaxed text-gray-400', text.body)}>
           {children}
         </p>
       )}

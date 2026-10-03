@@ -1,11 +1,10 @@
 import React from 'react';
-import { Moon, Sun, Sparkles, HelpCircle, RefreshCw, Cpu } from 'lucide-react';
+import { Moon, Sun, HelpCircle, RefreshCw } from 'lucide-react';
 import { Brand } from './Brand';
 
 interface HeaderProps {
   darkMode: boolean;
   setDarkMode: (val: boolean) => void;
-  onLoadSample: () => void;
   onOpenShortcuts: () => void;
   onReset: () => void;
   hasVideo: boolean;
@@ -14,39 +13,20 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   darkMode,
   setDarkMode,
-  onLoadSample,
   onOpenShortcuts,
   onReset,
   hasVideo,
 }) => {
   return (
     <header className="sticky top-0 z-40 border-b border-[#222] bg-[#0f0f12]/95 backdrop-blur-md transition-colors h-14">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-3">
         {/* Logo and Brand Title */}
-        <button type="button" onClick={onReset} className="cursor-pointer">
+        <button type="button" onClick={onReset} className="cursor-pointer flex-shrink-0">
           <Brand version="v2.4.0 Engine" />
         </button>
 
-        {/* Center/Status Badge */}
-        <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-[#16161a] border border-[#222]">
-          <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-          <span className="text-[10px] text-gray-400 font-mono tracking-wider uppercase flex items-center gap-1">
-            <Cpu className="w-3 h-3 text-emerald-400" /> GPU Acceleration Active
-          </span>
-        </div>
-
         {/* Action Controls */}
         <div className="flex items-center space-x-2">
-          <button
-            onClick={onLoadSample}
-            type="button"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#1a1a1f] hover:bg-[#25252b] border border-[#333] text-xs font-semibold text-gray-200 transition"
-            title="Load 15s test sample video"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span className="hidden sm:inline">Try Sample Video</span>
-          </button>
-
           {hasVideo && (
             <button
               onClick={onReset}
@@ -81,4 +61,3 @@ export const Header: React.FC<HeaderProps> = ({
     </header>
   );
 };
-

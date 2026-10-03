@@ -197,7 +197,7 @@ export function OverlayDemo() {
         </SectionHead>
       </div>
 
-      <m.div style={reduce ? undefined : { y: drift }} className={cx(layout.preview, 'mt-8')}>
+      <m.div style={reduce ? undefined : { y: drift }} className={cx(layout.preview, 'mt-7')}>
         <div className={cx(surface.inset, 'p-2')}>
           <canvas
             ref={canvasRef}

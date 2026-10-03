@@ -1,12 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { Upload, Video, Film, Sparkles, X, Clock, Maximize2, HardDrive, CheckCircle2 } from 'lucide-react';
+import { Upload, Video, Film, X, Clock, Maximize2, HardDrive, CheckCircle2 } from 'lucide-react';
 import { VideoMetadata } from '../types';
 import { formatFileSize, formatTime } from '../utils/videoUtils';
 
 interface VideoUploaderProps {
   videoMetadata: VideoMetadata | null;
   onVideoSelect: (file: File | Blob) => void;
-  onLoadSample: () => void;
   isLoading: boolean;
   onClearVideo: () => void;
 }
@@ -14,7 +13,6 @@ interface VideoUploaderProps {
 export const VideoUploader: React.FC<VideoUploaderProps> = ({
   videoMetadata,
   onVideoSelect,
-  onLoadSample,
   isLoading,
   onClearVideo,
 }) => {
@@ -177,24 +175,11 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
         </div>
       </div>
 
-      {/* Instant sample button */}
-      <div className="mt-3 flex flex-col sm:flex-row items-center justify-between gap-3 p-3 rounded bg-[#0d0d10] border border-[#222] text-xs text-gray-400">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0" />
-          <span>Don't have a video file ready right now?</span>
-        </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onLoadSample();
-          }}
-          type="button"
-          disabled={isLoading}
-          className="px-3 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5 disabled:opacity-50"
-        >
-          {isLoading ? 'Generating Sample...' : 'Load 15s Sample Video'}
-        </button>
-      </div>
+      {isLoading && (
+        <p className="mt-3 rounded bg-[#0d0d10] border border-[#222] p-3 text-center text-xs text-gray-400 font-mono">
+          Reading video metadata...
+        </p>
+      )}
     </div>
   );
 };

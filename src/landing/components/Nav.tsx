@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, m, useScroll, useSpring } from 'motion/react';
 import { Brand } from '../../components/Brand';
-import { chip, control, layout, surface, cx } from '../../theme';
+import { Github } from 'lucide-react';
+import { control, layout, surface, cx } from '../../theme';
 import { navLinks, site } from '../site';
 
 /**
@@ -69,8 +70,9 @@ export function Nav() {
             href={site.repositoryUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className={cx(control.secondary, 'hidden md:inline-flex items-center')}
+            className={cx(control.secondary, 'hidden items-center gap-1.5 md:inline-flex')}
           >
+            <Github className="h-3.5 w-3.5" />
             GitHub
           </a>
           <m.a
@@ -132,8 +134,12 @@ export function Nav() {
                   target="_blank"
                   rel="noreferrer noopener"
                   onClick={() => setOpen(false)}
-                  className={cx(control.secondary, 'my-2 flex items-center justify-center')}
+                  className={cx(
+                    control.secondary,
+                    'my-2 flex items-center justify-center gap-1.5'
+                  )}
                 >
+                  <Github className="h-3.5 w-3.5" />
                   GitHub
                 </a>
               </li>

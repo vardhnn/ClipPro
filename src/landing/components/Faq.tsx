@@ -16,16 +16,16 @@ export function Faq() {
       <div className={layout.container}>
         <SectionHead icon={HelpCircle} label="FAQ" title="The short answers." />
 
-        <div className="mt-10 grid gap-3 lg:grid-cols-2 lg:items-start">
+        <div className="mt-8 grid gap-3 lg:grid-cols-2 lg:items-stretch">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
 
             return (
-              <Reveal key={faq.question} delay={index * 0.05} y={10}>
+              <Reveal key={faq.question} delay={index * 0.05} y={10} className="h-full">
                 <div
                   className={cx(
                     surface.panel,
-                    'overflow-hidden transition-colors',
+                    'h-full overflow-hidden transition-colors',
                     isOpen && 'border-blue-800/50'
                   )}
                 >

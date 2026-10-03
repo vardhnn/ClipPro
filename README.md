@@ -12,8 +12,7 @@ no account. Your video never leaves the tab it was opened in.
 
 ## Features
 
-- **Drag-and-drop upload** for MP4, MOV, MKV, AVI and WebM, with a generated
-  15-second sample video so you can try the app without a file on hand.
+- **Drag-and-drop upload** for MP4, MOV, MKV, AVI and WebM.
 - **Clip duration presets** — 30s / 1m / 2m / 3m, or any custom length. A short
   final remainder becomes the last clip instead of being dropped.
 - **Auto-incrementing text overlays** — write `Part - 01` once and every clip
@@ -136,7 +135,7 @@ src/
 │   └── components/          # nav, backdrop, hero, live demo, details, FAQ, footer
 └── utils/
     ├── clipProcessor.ts     # render engine: seek → canvas → MediaRecorder
-    ├── videoUtils.ts        # metadata, sample video, canvas text rendering
+    ├── videoUtils.ts        # metadata + canvas text rendering
     └── zipUtils.ts          # ZIP packaging + download trigger
 ```
 

@@ -17,13 +17,13 @@ export function Features() {
           title="Clip duration, overlay and export settings."
         />
 
-        <RevealGroup className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <RevealGroup className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {capabilities.map((item) => (
             <RevealItem key={item.label}>
               <article
                 className={cx(
                   surface.panel,
-                  'flex h-full flex-col gap-2 p-4 transition hover:border-blue-500/50'
+                  'flex h-full flex-col items-center gap-2 p-4 text-center transition hover:border-blue-500/50'
                 )}
               >
                 <p className={cx(text.label, 'text-blue-400')}>{item.label}</p>

@@ -89,8 +89,10 @@ export const accent = {
 
 /** One breakpoint-driven container, so every band lines up. */
 export const layout = {
-  container: 'mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8',
-  section: 'py-16 sm:py-20 lg:py-24',
+  container: 'mx-auto w-full max-w-5xl px-4 sm:px-6 lg:px-8',
+  section: 'py-12 sm:py-16',
   /** Narrower measure for the live preview so it reads as a widget, not a hero. */
   preview: 'mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8',
+  /** Centred stack used by the hero and every section heading. */
+  centerStack: 'flex flex-col items-center text-center',
 } as const;

@@ -32,7 +32,7 @@ export interface Step {
 export const steps: Step[] = [
   {
     title: 'Upload video',
-    body: 'Drag an MP4, MOV, MKV, AVI or WebM onto the page, or load the built-in 15-second sample to see it run.',
+    body: 'Drag an MP4, MOV, MKV, AVI or WebM onto the page, or browse for one from your machine.',
   },
   {
     title: 'Clip & overlay',

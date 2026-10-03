@@ -15,7 +15,7 @@ export function Workflow() {
       <div className={layout.container}>
         <SectionHead icon={Scissors} label="How it works" title="Three steps, no setup." />
 
-        <RevealGroup className="mt-10 grid gap-3 sm:grid-cols-3">
+        <RevealGroup className="mt-8 grid gap-3 sm:grid-cols-3">
           {steps.map((step, index) => {
             const Icon = ICONS[index];
             const active = index === 0;
@@ -25,11 +25,11 @@ export function Workflow() {
                 <article
                   className={cx(
                     surface.panel,
-                    'flex h-full flex-col gap-2.5 p-3 transition',
+                    'flex h-full flex-col items-center gap-2.5 p-3 text-center transition',
                     active ? 'border-blue-800/50' : 'hover:border-[#333]'
                   )}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center gap-3">
                     <span
                       className={cx(
                         numeral.base,
@@ -50,7 +50,7 @@ export function Workflow() {
                     </p>
                   </div>
 
-                  <p className={cx('leading-relaxed', text.body)}>{step.body}</p>
+                  <p className={cx('text-center leading-relaxed', text.body)}>{step.body}</p>
                 </article>
               </RevealItem>
             );
