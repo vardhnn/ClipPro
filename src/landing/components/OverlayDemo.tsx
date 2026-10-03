@@ -202,14 +202,15 @@ export function OverlayDemo() {
           four back-to-back clips.
         </SectionHead>
 
-        {/* Phones stack the frame above its settings; from md up — phone landscape,
-            tablets, desktops — the pair sits side by side at 50/50 with both
-            cards locked to the same 16:9 box. */}
+        {/* Side by side from 640px up — phone landscape, tablets, desktops — with
+            both cards locked to the same 16:9 box. Only below that, where it is
+            genuinely a phone in portrait, does the frame stack above its
+            settings. */}
         <m.div
           style={reduce ? undefined : { y: drift }}
-          className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2"
+          className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2"
         >
-        <div className="flex items-center justify-center md:aspect-video">
+        <div className="flex items-center justify-center sm:aspect-video">
           <canvas
             ref={canvasRef}
             width={1280}
@@ -221,7 +222,7 @@ export function OverlayDemo() {
         <div
           className={cx(
             surface.panel,
-            'flex flex-col gap-2 p-3 md:aspect-video md:justify-center'
+            'flex flex-col gap-2 p-3 sm:aspect-video sm:justify-center'
           )}
         >
           <div className="flex items-center gap-3">
