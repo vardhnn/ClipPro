@@ -13,7 +13,7 @@ export function Workflow() {
   return (
     <section id="how" className={layout.section}>
       <div className={layout.container}>
-        <SectionHead icon={Scissors} label="How it works" title="Three steps, no setup." />
+        <SectionHead label="How it works" title="Three steps, no setup." />
 
         <RevealGroup className="mt-6 grid gap-3 sm:grid-cols-3">
           {steps.map((step, index) => {

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { m, useReducedMotion } from 'motion/react';
-import { cx, iconTile, layout, text } from '../../theme';
+import { cx, layout, text } from '../../theme';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -74,18 +74,17 @@ export function RevealItem({ children, className }: { children: ReactNode; class
 }
 
 /**
- * A centred heading: the app's icon tile and its uppercase label share one row,
- * then the title, then a short accent rule. Dropping the full-width hairline
- * that used to float above the icon is what stops these reading as four loose
- * pieces stacked on top of each other.
+ * A centred heading with a rule on each side of its label. The rules scale out
+ * from the centre to meet the text, and the gap in the flex row guarantees they
+ * never run into it at any width.
  */
 export function SectionHead({
-  icon: Icon,
+  icon: _icon,
   label,
   title,
   children,
 }: {
-  icon: LucideIcon;
+  icon?: LucideIcon;
   label: string;
   title: string;
   children?: ReactNode;
@@ -94,31 +93,37 @@ export function SectionHead({
 
   return (
     <Reveal className={layout.centerStack}>
-      <m.span
-        className="inline-flex items-center gap-2.5 rounded-full border border-[#222] bg-[#16161a] py-1.5 pl-1.5 pr-4"
-        initial={{ opacity: 0, y: reduce ? 0 : 8, scale: reduce ? 1 : 0.96 }}
-        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, ease: EASE }}
-      >
-        <span className={iconTile}>
-          <Icon className="w-3.5 h-3.5" />
-        </span>
-        <span className={text.label}>{label}</span>
-      </m.span>
+      <div className="flex w-full items-center gap-3 sm:gap-5">
+        <m.span
+          aria-hidden="true"
+          className="h-px flex-1 origin-right bg-[#222]"
+          initial={{ scaleX: reduce ? 1 : 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: EASE }}
+        />
+        <m.span
+          className={cx(text.label, 'shrink-0 whitespace-nowrap')}
+          initial={{ opacity: 0, y: reduce ? 0 : 6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: EASE }}
+        >
+          {label}
+        </m.span>
+        <m.span
+          aria-hidden="true"
+          className="h-px flex-1 origin-left bg-[#222]"
+          initial={{ scaleX: reduce ? 1 : 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: EASE }}
+        />
+      </div>
 
-      <h2 className="mt-3 max-w-2xl text-xl font-bold tracking-tight text-white sm:text-2xl">
+      <h2 className="mt-4 max-w-2xl text-xl font-bold tracking-tight text-white sm:text-2xl">
         {title}
       </h2>
-
-      <m.span
-        aria-hidden="true"
-        className="mt-3 block h-px w-10 origin-center rounded-full bg-blue-600/60"
-        initial={{ scaleX: reduce ? 1 : 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.1, ease: EASE }}
-      />
 
       {children && (
         <p className={cx('mt-3 max-w-xl leading-relaxed text-gray-400', text.body)}>

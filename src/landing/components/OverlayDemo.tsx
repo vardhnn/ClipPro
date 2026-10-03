@@ -9,7 +9,7 @@ import {
   useTransform,
 } from 'motion/react';
 import type { TextLayer } from '../../types';
-import { Type } from 'lucide-react';
+
 import { drawTextLayerOnCanvas } from '../../utils/videoUtils';
 import { SectionHead } from './ui';
 // `text` is aliased: this component has its own `text` state for the overlay string.
@@ -66,7 +66,9 @@ export function OverlayDemo() {
       xPercent: 50,
       yPercent: POSITIONS.find((item) => item.id === position)?.y ?? 82,
       fontFamily: 'Montserrat, system-ui, sans-serif',
-      fontSize: 52,
+      // The renderer scales text off canvasWidth/1080, so a 720px portrait frame
+      // needs a larger base size to stay legible than the landscape one did.
+      fontSize: 78,
       color,
       fontWeight: 'bold',
       fontStyle: 'normal',
@@ -125,36 +127,43 @@ export function OverlayDemo() {
 
       ctx.strokeStyle = 'rgba(255,255,255,0.06)';
       ctx.lineWidth = 1;
-      for (let x = 0; x < width; x += 64) {
+      const cell = Math.max(width, height) / 12;
+      for (let x = 0; x < width; x += cell) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, height);
         ctx.stroke();
       }
-      for (let y = 0; y < height; y += 64) {
+      for (let y = 0; y < height; y += cell) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
         ctx.stroke();
       }
 
-      const barWidth = width / 26;
-      for (let i = 0; i < 24; i++) {
-        const barHeight = 40 + Math.abs(Math.sin(t * 3 + i * 0.6)) * (height * 0.22);
+      // Everything below is measured against the frame, so the stand-in footage
+      // fills a 9:16 canvas as sensibly as it would a landscape one.
+      const baseline = height * 0.78;
+      const barCount = 9;
+      const barSlot = width * 0.84;
+      const barWidth = (barSlot / barCount) * 0.55;
+      for (let i = 0; i < barCount; i++) {
+        const barHeight =
+          height * 0.05 + Math.abs(Math.sin(t * 3 + i * 0.6)) * height * 0.16;
         ctx.fillStyle = `rgba(96, 165, 250, ${0.18 + (i % 5) * 0.05})`;
         ctx.fillRect(
-          width * 0.08 + i * barWidth,
-          height * 0.72 - barHeight,
-          barWidth * 0.55,
+          width * 0.08 + i * (barSlot / barCount),
+          baseline - barHeight,
+          barWidth,
           barHeight
         );
       }
 
       ctx.beginPath();
       ctx.arc(
-        width * 0.72 + Math.cos(t * 1.4) * 90,
-        height * 0.34 + Math.sin(t * 1.9) * 50,
-        120 + Math.sin(t * 2.2) * 24,
+        width * 0.5 + Math.cos(t * 1.4) * width * 0.14,
+        height * 0.3 + Math.sin(t * 1.9) * height * 0.035,
+        width * 0.16 + Math.sin(t * 2.2) * width * 0.03,
         0,
         Math.PI * 2
       );
@@ -187,7 +196,7 @@ export function OverlayDemo() {
     <section id="demo" ref={sectionRef} className={cx(layout.section, 'overflow-hidden')}>
       <div className={layout.container}>
         <SectionHead
-          icon={Type}
+
           label="Live preview"
           title="The app’s own overlay renderer, running here."
         >
@@ -196,16 +205,20 @@ export function OverlayDemo() {
           four back-to-back clips.
         </SectionHead>
 
+        {/* Video and settings stay side by side at every breakpoint; the frame is
+            9:16 so the narrow column still gives the canvas a real aspect. The
+            settings panel stretches to the frame's height so the row has no
+            ragged bottom edge. */}
         <m.div
           style={reduce ? undefined : { y: drift }}
-          className="mt-6 grid gap-3 lg:grid-cols-[1.55fr_1fr] lg:items-start"
+          className="mt-6 grid grid-cols-[38%_62%] gap-2 sm:gap-3"
         >
-        <div className={cx(surface.inset, 'p-2')}>
+        <div className="flex justify-center">
           <canvas
             ref={canvasRef}
-            width={1280}
-            height={720}
-            className="block w-full rounded bg-[#0b0f16]"
+            width={720}
+            height={1280}
+            className="block w-full max-w-[220px] rounded border border-[#222] bg-[#0b0f16] sm:max-w-[300px]"
           />
         </div>
 

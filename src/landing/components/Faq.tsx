@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, m } from 'motion/react';
-import { HelpCircle } from 'lucide-react';
+
 import { faqs } from '../site';
 import { Reveal, SectionHead } from './ui';
 import { cx, layout, surface, text } from '../../theme';
@@ -14,7 +14,7 @@ export function Faq() {
   return (
     <section id="faq" className={layout.section}>
       <div className={layout.container}>
-        <SectionHead icon={HelpCircle} label="FAQ" title="The short answers." />
+        <SectionHead label="FAQ" title="The short answers." />
 
         <div className="mt-6 grid gap-3 lg:grid-cols-2 lg:items-stretch">
           {faqs.map((faq, index) => {

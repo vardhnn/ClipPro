@@ -1,4 +1,4 @@
-import { Settings2 } from 'lucide-react';
+
 import { capabilities } from '../site';
 import { RevealGroup, RevealItem, SectionHead } from './ui';
 import { cx, layout, surface, text } from '../../theme';
@@ -12,7 +12,7 @@ export function Features() {
     <section id="details" className={layout.section}>
       <div className={layout.container}>
         <SectionHead
-          icon={Settings2}
+
           label="Details"
           title="Clip duration, overlay and export settings."
         />
