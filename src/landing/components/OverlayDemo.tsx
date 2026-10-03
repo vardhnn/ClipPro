@@ -66,9 +66,7 @@ export function OverlayDemo() {
       xPercent: 50,
       yPercent: POSITIONS.find((item) => item.id === position)?.y ?? 82,
       fontFamily: 'Montserrat, system-ui, sans-serif',
-      // The renderer scales text off canvasWidth/1080, so a 720px portrait frame
-      // needs a larger base size to stay legible than the landscape one did.
-      fontSize: 78,
+      fontSize: 52,
       color,
       fontWeight: 'bold',
       fontStyle: 'normal',
@@ -127,7 +125,7 @@ export function OverlayDemo() {
 
       ctx.strokeStyle = 'rgba(255,255,255,0.06)';
       ctx.lineWidth = 1;
-      const cell = Math.max(width, height) / 12;
+      const cell = width / 16;
       for (let x = 0; x < width; x += cell) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
@@ -141,15 +139,15 @@ export function OverlayDemo() {
         ctx.stroke();
       }
 
-      // Everything below is measured against the frame, so the stand-in footage
-      // fills a 9:16 canvas as sensibly as it would a landscape one.
-      const baseline = height * 0.78;
-      const barCount = 9;
+      // Stand-in footage, measured against the frame so it still fills
+      // sensibly if the aspect is ever changed again.
+      const baseline = height * 0.8;
+      const barCount = 18;
       const barSlot = width * 0.84;
       const barWidth = (barSlot / barCount) * 0.55;
       for (let i = 0; i < barCount; i++) {
         const barHeight =
-          height * 0.05 + Math.abs(Math.sin(t * 3 + i * 0.6)) * height * 0.16;
+          height * 0.08 + Math.abs(Math.sin(t * 3 + i * 0.6)) * height * 0.34;
         ctx.fillStyle = `rgba(96, 165, 250, ${0.18 + (i % 5) * 0.05})`;
         ctx.fillRect(
           width * 0.08 + i * (barSlot / barCount),
@@ -161,9 +159,9 @@ export function OverlayDemo() {
 
       ctx.beginPath();
       ctx.arc(
-        width * 0.5 + Math.cos(t * 1.4) * width * 0.14,
-        height * 0.3 + Math.sin(t * 1.9) * height * 0.035,
-        width * 0.16 + Math.sin(t * 2.2) * width * 0.03,
+        width * 0.72 + Math.cos(t * 1.4) * width * 0.07,
+        height * 0.34 + Math.sin(t * 1.9) * height * 0.07,
+        width * 0.09 + Math.sin(t * 2.2) * width * 0.02,
         0,
         Math.PI * 2
       );
@@ -204,20 +202,20 @@ export function OverlayDemo() {
           four back-to-back clips.
         </SectionHead>
 
-        {/* Both columns are exactly 50% at every viewport: video on the left,
-            its settings on the right, no stacking breakpoint. The frame is 9:16,
-            so the canvas centres in its cell while the panel stretches to the
-            row height — whichever is taller, both cards end on the same line. */}
+        {/* Two equal columns at every viewport: the frame on the left, its settings
+            on the right, no stacking breakpoint. Both are the same card and
+            both stretch to the row height, so the split reads as a deliberate
+            pair and the two always end on the same line. */}
         <m.div
           style={reduce ? undefined : { y: drift }}
           className="mt-6 grid grid-cols-2 gap-2 sm:gap-3"
         >
-        <div className="flex items-center justify-center">
+        <div className={cx(surface.panel, 'flex items-center justify-center p-3')}>
           <canvas
             ref={canvasRef}
-            width={720}
-            height={1280}
-            className="block w-full max-w-[240px] rounded border border-[#222] bg-[#0b0f16] sm:max-w-[300px]"
+            width={1280}
+            height={720}
+            className="block w-full rounded bg-[#0b0f16]"
           />
         </div>
 
