@@ -1,0 +1,6 @@
+{
+  "name": "Automatic Video Clip Generator",
+  "description": "Split long videos into equal-duration clips, apply smart sequential text overlays, and export to a downloadable ZIP archive.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

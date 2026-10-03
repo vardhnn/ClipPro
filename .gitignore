@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+build/
+coverage/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Tooling & editor cruft
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Local agent / AI Studio workspace metadata
+.freebuff/
+assets/.aistudio/
+
+# Hosting
+.vercel/
