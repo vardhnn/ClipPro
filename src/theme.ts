@@ -38,6 +38,15 @@ export const text = {
   hero: 'text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl',
   section: 'text-xl font-bold tracking-tight text-white sm:text-2xl',
   body: 'text-xs text-gray-400',
+  /**
+   * Card-local scale, deliberately below `body`. A card is a grid cell, not a
+   * paragraph: its copy has to survive at two-across on a 390px phone without
+   * outweighing the label above it. Note `cardBody` carries the *tighter*
+   * leading — small type needs less air, not more, or the block stops looking
+   * smaller even though it is.
+   */
+  cardTitle: 'text-[12px] font-mono font-bold uppercase leading-tight tracking-wider',
+  cardBody: 'text-[10px] leading-[1.5] text-gray-400',
   lead: 'text-sm leading-relaxed text-gray-400 sm:text-base',
   muted: 'text-[11px] text-gray-500',
   /** The recurring uppercase label used above every control group. */

@@ -40,9 +40,9 @@ export function Workflow() {
                     </span>
                     <p
                       className={cx(
-                        text.label,
+                        text.cardTitle,
                         'flex items-center gap-1.5',
-                        active && 'text-blue-400'
+                        active ? 'text-blue-400' : 'text-gray-400'
                       )}
                     >
                       <Icon className="w-3.5 h-3.5" />
@@ -50,7 +50,7 @@ export function Workflow() {
                     </p>
                   </div>
 
-                  <p className={cx('text-center leading-relaxed', text.body)}>{step.body}</p>
+                  <p className={cx('text-center', text.cardBody)}>{step.body}</p>
                 </article>
               </RevealItem>
             );

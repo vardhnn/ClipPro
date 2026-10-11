@@ -26,8 +26,8 @@ export function Features() {
                   'flex h-full flex-col items-center gap-2 p-4 text-center transition hover:border-blue-500/50'
                 )}
               >
-                <p className={cx(text.label, 'text-blue-400')}>{item.label}</p>
-                <p className={cx('leading-relaxed', text.body)}>{item.detail}</p>
+                <p className={cx(text.cardTitle, 'text-blue-400')}>{item.label}</p>
+                <p className={text.cardBody}>{item.detail}</p>
               </article>
             </RevealItem>
           ))}
